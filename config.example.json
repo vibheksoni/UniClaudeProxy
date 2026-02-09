@@ -4,10 +4,10 @@
     "port": 9223
   },
   "models": {
-    "claude-sonnet-4-5-20250929": "deepseek/deepseek-chat",
-    "claude-3-5-sonnet-20241022": "glm/glm-4.7",
-    "claude-3-5-haiku-20241022": "ollama/llama3.1:70b",
-    "claude-opus-4-5-20251101": "deepseek/deepseek-reasoner"
+    "claude-sonnet-4-5-20250929": "glm/glm-4.7",
+    "claude-3-5-sonnet-20241022": "glm/glm-4.6",
+    "claude-3-5-haiku-20241022": "glm/glm-4.5-air",
+    "claude-opus-4-5-20251101": "glm/glm-4.5"
   },
   "providers": {
     "deepseek": {
