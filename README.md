@@ -18,6 +18,8 @@
 
 > I wanted a quick way to use all the models in Claude Code without being locked to a single provider. So I built one of the best proxies out there — fast, modular, and packed with features that just work.
 
+If this project is useful to you, consider giving it a star. It helps others find it.
+
 ```
 Claude Code CLI  -->  UniClaudeProxy (localhost:9223)  -->  Any LLM Provider
      ^                        |
