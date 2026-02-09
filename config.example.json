@@ -29,7 +29,7 @@
     "glm": {
       "provider_type": "claude",
       "api_key": "your-glm-api-key",
-      "base_url": "https://open.bigmodel.cn/api/anthropic/v1",
+      "base_url": "https://api.z.ai/api/anthropic/v1",
       "headers": {
         "x-api-key": "your-glm-api-key",
         "anthropic-version": "2023-06-01",
