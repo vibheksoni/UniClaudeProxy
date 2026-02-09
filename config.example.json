@@ -1,0 +1,68 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 9223
+  },
+  "models": {
+    "claude-sonnet-4-5-20250929": "deepseek/deepseek-chat",
+    "claude-3-5-sonnet-20241022": "glm/glm-4-plus",
+    "claude-3-5-haiku-20241022": "ollama/llama3.1:70b",
+    "claude-opus-4-5-20251101": "deepseek/deepseek-reasoner"
+  },
+  "providers": {
+    "deepseek": {
+      "provider_type": "openai",
+      "api_key": "sk-your-deepseek-api-key",
+      "base_url": "https://api.deepseek.com",
+      "headers": {},
+      "models": {
+        "deepseek-chat": {
+          "name": "DeepSeek V3",
+          "max_output_tokens": 8192
+        },
+        "deepseek-reasoner": {
+          "name": "DeepSeek R1",
+          "max_output_tokens": 16384
+        }
+      }
+    },
+    "glm": {
+      "provider_type": "openai",
+      "api_key": "your-glm-api-key",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "headers": {},
+      "models": {
+        "glm-4-plus": {
+          "name": "GLM-4 Plus",
+          "max_output_tokens": 4096
+        }
+      }
+    },
+    "ollama": {
+      "provider_type": "openai",
+      "api_key": "ollama",
+      "base_url": "http://localhost:11434/v1",
+      "headers": {},
+      "models": {
+        "llama3.1:70b": {
+          "name": "Llama 3.1 70B (Local)",
+          "use_react": true,
+          "force_stream": true,
+          "system_replacements": {
+            "You are Claude Code, Anthropic's official CLI for Claude.": "You are an advanced AI coding assistant integrated into a CLI tool.",
+            "Claude Code": "the coding assistant"
+          }
+        },
+        "qwen2.5-coder:32b": {
+          "name": "Qwen 2.5 Coder 32B (Local)",
+          "use_react": true,
+          "force_stream": true,
+          "system_replacements": {
+            "You are Claude Code, Anthropic's official CLI for Claude.": "You are an advanced AI coding assistant integrated into a CLI tool.",
+            "Claude Code": "the coding assistant"
+          }
+        }
+      }
+    }
+  }
+}
