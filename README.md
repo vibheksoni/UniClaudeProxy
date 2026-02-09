@@ -4,6 +4,12 @@
     <strong>Use Any LLM with Claude Code — The Universal Anthropic API Proxy</strong>
   </p>
   <p align="center">
+    <a href="https://github.com/vibheksoni/UniClaudeProxy/stargazers"><img src="https://img.shields.io/github/stars/vibheksoni/UniClaudeProxy?style=social" alt="Stars"></a>
+    <a href="https://github.com/vibheksoni/UniClaudeProxy/network/members"><img src="https://img.shields.io/github/forks/vibheksoni/UniClaudeProxy?style=social" alt="Forks"></a>
+    <a href="https://github.com/vibheksoni/UniClaudeProxy/releases"><img src="https://img.shields.io/github/v/release/vibheksoni/UniClaudeProxy" alt="Release"></a>
+    <a href="https://github.com/vibheksoni/UniClaudeProxy/blob/master/LICENSE"><img src="https://img.shields.io/github/license/vibheksoni/UniClaudeProxy" alt="License"></a>
+  </p>
+  <p align="center">
     <a href="#quick-start">Quick Start</a> &bull;
     <a href="#features">Features</a> &bull;
     <a href="#configuration">Configuration</a> &bull;
