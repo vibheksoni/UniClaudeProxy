@@ -101,31 +101,45 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 9223
 
 ### 4. Point Claude Code to the proxy
 
-**Option A — Environment variable (recommended):**
-
-```bash
-export ANTHROPIC_BASE_URL=http://127.0.0.1:9223
-```
-
-Add this to your `.bashrc`, `.zshrc`, or shell profile to make it permanent.
-
-**Option B — Claude Code settings file:**
-
-Add to `~/.claude/settings.json` (user scope) or `.claude/settings.json` (project scope):
+The recommended way is to create a **Claude Code profile** in `~/.claude/settings.json`. This keeps your proxy config isolated and stable:
 
 ```json
 {
-  "env": {
-    "ANTHROPIC_BASE_URL": "http://127.0.0.1:9223"
+  "profiles": {
+    "cc-proxy": {
+      "env": {
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_BASE_URL": "http://127.0.0.1:9223",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+        "API_TIMEOUT_MS": "3000000",
+        "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "50000",
+        "CLAUDE_BASH_NO_LOGIN": "1"
+      },
+      "permissions": {
+        "allow": [],
+        "deny": []
+      }
+    }
   }
 }
 ```
 
-**Option C — Inline (one-off session):**
+Then launch Claude Code with the profile:
 
 ```bash
-ANTHROPIC_BASE_URL=http://127.0.0.1:9223 claude
+claude --profile cc-proxy
 ```
+
+**What each variable does:**
+
+| Variable | Purpose |
+|---|---|
+| `ANTHROPIC_AUTH_TOKEN` | Empty — proxy handles auth, no token needed client-side |
+| `ANTHROPIC_BASE_URL` | Routes all API traffic through UniClaudeProxy |
+| `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` | Prevents Claude Code from making background requests that bypass the proxy |
+| `API_TIMEOUT_MS` | 50-minute timeout — prevents disconnects on long-running tool calls |
+| `CLAUDE_CODE_MAX_OUTPUT_TOKENS` | Allows up to 50k output tokens per response |
+| `CLAUDE_BASH_NO_LOGIN` | Skips login shell for bash commands — faster execution |
 
 That's it. Claude Code now routes through UniClaudeProxy to whatever backend you configured. Run `/status` inside Claude Code to verify the endpoint is active.
 
