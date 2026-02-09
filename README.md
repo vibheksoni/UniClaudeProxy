@@ -134,7 +134,7 @@ claude --profile cc-proxy
 
 | Variable | Purpose |
 |---|---|
-| `ANTHROPIC_AUTH_TOKEN` | Empty — proxy handles auth, no token needed client-side |
+| `ANTHROPIC_AUTH_TOKEN` | Set to empty — UniClaudeProxy does not implement Anthropic auth token validation. Auth is handled per-provider via `api_key` in your `config.json`. This just satisfies Claude Code's requirement for a token to be set |
 | `ANTHROPIC_BASE_URL` | Routes all API traffic through UniClaudeProxy |
 | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` | Prevents Claude Code from making background requests that bypass the proxy |
 | `API_TIMEOUT_MS` | 50-minute timeout — prevents disconnects on long-running tool calls |
