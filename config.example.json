@@ -1,7 +1,8 @@
 {
   "server": {
     "host": "127.0.0.1",
-    "port": 9223
+    "port": 9223,
+    "local_only": true
   },
   "models": {
     "claude-haiku-4-5": "glm/glm-4.5-air",

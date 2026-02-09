@@ -6,7 +6,8 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, PlainTextResponse, StreamingResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import config_path, load_config, reload_config, resolve_route
 from app.watcher import ConfigWatcher
@@ -30,9 +31,9 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
-logger = logging.getLogger("anyclaude")
+logger = logging.getLogger("uniclaudeproxy")
 
-debug_logger = logging.getLogger("anyclaude.debug")
+debug_logger = logging.getLogger("uniclaudeproxy.debug")
 debug_logger.setLevel(logging.DEBUG)
 _debug_handler = logging.FileHandler("debug.log", mode="a", encoding="utf-8")
 _debug_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
@@ -51,7 +52,7 @@ async def lifespan(app: FastAPI):
         f.truncate(0)
 
     cfg = load_config()
-    logger.info("AnyClaude started on %s:%d", cfg.server.host, cfg.server.port)
+    logger.info("UniClaudeProxy started on %s:%d", cfg.server.host, cfg.server.port)
     logger.info("Model mappings: %s", json.dumps(cfg.models, indent=2))
 
     def _on_config_change():
@@ -68,15 +69,49 @@ async def lifespan(app: FastAPI):
     await openai_provider.close_client()
     await gemini_provider.close_client()
     await anthropic_provider.close_client()
-    logger.info("AnyClaude shutdown complete")
+    logger.info("UniClaudeProxy shutdown complete")
 
 
 app = FastAPI(
-    title="AnyClaude",
+    title="UniClaudeProxy",
     description="Anthropic API proxy that bridges to OpenAI and other providers",
-    version="0.1.0",
+    version="1.0.0",
     lifespan=lifespan,
 )
+
+LOCALHOST_ADDRESSES = {"127.0.0.1", "::1", "localhost"}
+
+
+class LocalOnlyMiddleware(BaseHTTPMiddleware):
+    """Middleware that restricts access to localhost connections only.
+
+    Rejects any request originating from a non-local IP address
+    when local_only is enabled in the server configuration.
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        """Check if the request originates from a local address.
+
+        Args:
+            request: Request - The incoming request.
+            call_next: Callable - The next middleware or route handler.
+
+        Returns:
+            Response - The response from the next handler, or 403 if blocked.
+        """
+        cfg = load_config()
+        if cfg.server.local_only:
+            client_host = request.client.host if request.client else None
+            if client_host not in LOCALHOST_ADDRESSES:
+                logger.warning("Blocked non-local request from %s", client_host)
+                return PlainTextResponse(
+                    status_code=403,
+                    content="Forbidden: local_only mode is enabled. Only localhost connections are allowed.",
+                )
+        return await call_next(request)
+
+
+app.add_middleware(LocalOnlyMiddleware)
 
 
 @app.post("/v1/messages")

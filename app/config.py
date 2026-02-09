@@ -69,10 +69,12 @@ class ServerConfig(BaseModel):
     Attributes:
         host: str - Host address to bind to.
         port: int - Port number to listen on.
+        local_only: bool - Restrict access to localhost connections only.
     """
 
     host: str = "127.0.0.1"
     port: int = 9223
+    local_only: bool = True
 
 
 class AppConfig(BaseModel):

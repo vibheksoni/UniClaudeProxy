@@ -39,6 +39,7 @@ Claude Code CLI  -->  UniClaudeProxy (localhost:9223)  -->  Any LLM Provider
 - **Full tool calling support** — native function calling + ReAct XML fallback for models without it
 - **Streaming first** — real-time SSE streaming with proper Anthropic event format
 - **Production ready** — hot-reload config, image support, thinking/reasoning blocks, custom headers
+- **Secure by default** — local-only mode blocks all non-localhost connections out of the box
 
 ---
 
@@ -159,7 +160,7 @@ UniClaudeProxy uses a single `config.json` file with three sections:
 
 ```json
 {
-  "server": { "host": "127.0.0.1", "port": 9223 },
+  "server": { "host": "127.0.0.1", "port": 9223, "local_only": true },
   "models": {
     "<anthropic-model-name>": "<provider-name>/<model-id>"
   },
@@ -220,6 +221,30 @@ Some models refuse to operate when they see identity claims like "You are Claude
 ```
 
 Replacements are applied universally before any provider dispatch — works with OpenAI, Gemini, Claude passthrough, and ReAct paths.
+
+---
+
+## Security
+
+UniClaudeProxy proxies API keys and model requests, so it is locked down to localhost by default.
+
+### Local-Only Mode
+
+The `local_only` setting in the server config blocks all connections from non-local IP addresses. It is enabled by default.
+
+```json
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 9223,
+    "local_only": true
+  }
+}
+```
+
+When enabled, only requests from `127.0.0.1`, `::1`, and `localhost` are accepted. All other connections receive a `403 Forbidden` response.
+
+To allow connections from other machines on your network (not recommended unless you know what you are doing), set `local_only` to `false` and change `host` to `0.0.0.0`.
 
 ---
 
