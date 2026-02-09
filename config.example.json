@@ -27,14 +27,17 @@
       }
     },
     "glm": {
-      "provider_type": "openai",
+      "provider_type": "claude",
       "api_key": "your-glm-api-key",
-      "base_url": "https://open.bigmodel.cn/api/paas/v4",
-      "headers": {},
+      "base_url": "https://open.bigmodel.cn/api/anthropic/v1",
+      "headers": {
+        "x-api-key": "your-glm-api-key",
+        "anthropic-version": "2023-06-01",
+        "Content-Type": "application/json"
+      },
       "models": {
         "glm-4-plus": {
-          "name": "GLM-4 Plus",
-          "max_output_tokens": 4096
+          "name": "GLM-4 Plus"
         }
       }
     },
