@@ -424,10 +424,12 @@ async def stream_openai_chat_to_anthropic(
     msg_id = _generate_message_id()
     next_index = 0
     text_block_index = -1
+    thinking_block_index = -1
     tool_index_map: dict[int, int] = {}
     tool_args_buffer: dict[int, str] = {}
     started = False
     text_block_started = False
+    thinking_block_started = False
     output_tokens = 0
     finish_reason = "stop"
 
@@ -475,6 +477,10 @@ async def stream_openai_chat_to_anthropic(
 
             delta_content = delta.get("content")
             if delta_content:
+                if thinking_block_started:
+                    yield _build_content_block_stop_event(thinking_block_index)
+                    thinking_block_started = False
+
                 if not text_block_started:
                     text_block_index = next_index
                     next_index += 1
@@ -483,11 +489,33 @@ async def stream_openai_chat_to_anthropic(
                     started = True
                 yield _build_text_delta_event(text_block_index, delta_content)
 
+            reasoning_content = delta.get("reasoning_content")
+            if reasoning_content:
+                if text_block_started:
+                    yield _build_content_block_stop_event(text_block_index)
+                    text_block_started = False
+
+                if not thinking_block_started:
+                    thinking_block_index = next_index
+                    next_index += 1
+                    yield _build_content_block_start_event(thinking_block_index, "thinking")
+                    thinking_block_started = True
+                    started = True
+                yield _sse_event("content_block_delta", {
+                    "type": "content_block_delta",
+                    "index": thinking_block_index,
+                    "delta": {"type": "thinking_delta", "thinking": reasoning_content}
+                })
+
             tool_calls = delta.get("tool_calls", [])
             for tc in tool_calls:
                 tc_index = tc.get("index", 0)
 
                 if tc_index not in tool_index_map:
+                    if thinking_block_started:
+                        yield _build_content_block_stop_event(thinking_block_index)
+                        thinking_block_started = False
+
                     if text_block_started:
                         yield _build_content_block_stop_event(text_block_index)
                         text_block_started = False
@@ -514,6 +542,9 @@ async def stream_openai_chat_to_anthropic(
                         tool_index_map[tc_index],
                         args_delta,
                     )
+
+    if thinking_block_started:
+        yield _build_content_block_stop_event(thinking_block_index)
 
     if text_block_started:
         yield _build_content_block_stop_event(text_block_index)
