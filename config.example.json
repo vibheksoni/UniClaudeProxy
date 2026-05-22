@@ -31,6 +31,20 @@
         }
       }
     },
+    "tuningengines": {
+      "provider_type": "openai",
+      "api_key": "sk-te-your-tuning-engines-key",
+      "base_url": "https://api.tuningengines.com/v1",
+      "headers": {},
+      "models": {
+        "llama-3.3-70b-fp8": {
+          "name": "Llama 3.3 70B FP8"
+        },
+        "qwen-2.5-coder-32b": {
+          "name": "Qwen 2.5 Coder 32B"
+        }
+      }
+    },
     "glm": {
       "provider_type": "claude",
       "api_key": "your-glm-api-key",

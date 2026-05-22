@@ -34,7 +34,7 @@ Claude Code CLI  -->  UniClaudeProxy (localhost:9223)  -->  Any LLM Provider
 
 ## Why UniClaudeProxy?
 
-- **Use any model with Claude Code** — DeepSeek, GLM, Ollama, Gemini, or any OpenAI-compatible API
+- **Use any model with Claude Code** — DeepSeek, GLM, Tuning Engines, Ollama, Gemini, or any OpenAI-compatible API
 - **Zero changes to Claude Code** — just point the API URL to `localhost:9223`
 - **Full tool calling support** — native function calling + ReAct XML fallback for models without it
 - **Streaming first** — real-time SSE streaming with proper Anthropic event format
@@ -52,6 +52,23 @@ Claude Code CLI  -->  UniClaudeProxy (localhost:9223)  -->  Any LLM Provider
 | **OpenAI-compatible** | Responses API | `/v1/responses` | :white_check_mark: |
 | **Google Gemini** | Native Gemini API | `generateContent` / `streamGenerateContent` | :white_check_mark: |
 | **Anthropic Passthrough** | Messages API | `/v1/messages` | :white_check_mark: |
+
+### Tuning Engines Example
+
+Tuning Engines works through the OpenAI-compatible provider type:
+
+```json
+"tuningengines": {
+  "provider_type": "openai",
+  "api_key": "sk-te-your-tuning-engines-key",
+  "base_url": "https://api.tuningengines.com/v1",
+  "headers": {},
+  "models": {
+    "llama-3.3-70b-fp8": { "name": "Llama 3.3 70B FP8" },
+    "qwen-2.5-coder-32b": { "name": "Qwen 2.5 Coder 32B" }
+  }
+}
+```
 
 ### Core Features
 
