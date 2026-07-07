@@ -20,7 +20,7 @@
 
 ---
 
-**UniClaudeProxy** is a lightweight, high-performance FastAPI proxy that lets [Claude Code](https://docs.anthropic.com/en/docs/claude-code) talk to **any LLM backend** — OpenAI-compatible APIs, Google Gemini, DeepSeek, GLM, Ollama, or Anthropic passthrough. Drop it in as your API endpoint and use whatever model you want with Claude Code's full tool-calling capabilities.
+**UniClaudeProxy** is a lightweight, high-performance FastAPI proxy that lets [Claude Code](https://docs.anthropic.com/en/docs/claude-code) talk to **any LLM backend** — OpenAI-compatible APIs, Google Gemini, DeepSeek, GLM, Tuning Engines, Ollama, or Anthropic passthrough. Drop it in as your API endpoint and use whatever model you want with Claude Code's full tool-calling capabilities.
 
 > I wanted a quick way to use all the models in Claude Code without being locked to a single provider. So I built one of the best proxies out there — fast, modular, and packed with features that just work.
 
@@ -52,23 +52,6 @@ Claude Code CLI  -->  UniClaudeProxy (localhost:9223)  -->  Any LLM Provider
 | **OpenAI-compatible** | Responses API | `/v1/responses` | :white_check_mark: |
 | **Google Gemini** | Native Gemini API | `generateContent` / `streamGenerateContent` | :white_check_mark: |
 | **Anthropic Passthrough** | Messages API | `/v1/messages` | :white_check_mark: |
-
-### Tuning Engines Example
-
-Tuning Engines works through the OpenAI-compatible provider type:
-
-```json
-"tuningengines": {
-  "provider_type": "openai",
-  "api_key": "sk-te-your-tuning-engines-key",
-  "base_url": "https://api.tuningengines.com/v1",
-  "headers": {},
-  "models": {
-    "llama-3.3-70b-fp8": { "name": "Llama 3.3 70B FP8" },
-    "qwen-2.5-coder-32b": { "name": "Qwen 2.5 Coder 32B" }
-  }
-}
-```
 
 ### Core Features
 
@@ -274,6 +257,7 @@ Any API that speaks the OpenAI Chat Completions or Responses protocol. This incl
 
 - **DeepSeek** — DeepSeek V3, DeepSeek R1
 - **GLM (Zhipu AI)** — GLM-4, GLM-4 Plus
+- **Tuning Engines** — Tenant-routed OpenAI-compatible inference
 - **Ollama** — Any local model (Llama, Qwen, Mistral, etc.)
 - **LM Studio** — Local models via OpenAI-compatible API
 - **vLLM** — Self-hosted inference
@@ -289,6 +273,24 @@ Any API that speaks the OpenAI Chat Completions or Responses protocol. This incl
     "deepseek-chat": {
       "name": "DeepSeek V3",
       "max_output_tokens": 8192
+    }
+  }
+}
+```
+
+#### Tuning Engines
+
+Tuning Engines works through the same OpenAI-compatible provider type. Use an inference key that starts with `sk-te-...`, and replace or extend the sample model IDs with the models available to your key from `te inference models`.
+
+```json
+{
+  "provider_type": "openai",
+  "api_key": "sk-te-your-tuning-engines-key",
+  "base_url": "https://api.tuningengines.com/v1",
+  "headers": {},
+  "models": {
+    "llama-3.3-70b-fp8": {
+      "name": "Llama 3.3 70B FP8"
     }
   }
 }

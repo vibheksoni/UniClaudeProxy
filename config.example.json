@@ -39,9 +39,6 @@
       "models": {
         "llama-3.3-70b-fp8": {
           "name": "Llama 3.3 70B FP8"
-        },
-        "qwen-2.5-coder-32b": {
-          "name": "Qwen 2.5 Coder 32B"
         }
       }
     },
